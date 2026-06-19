@@ -1,0 +1,35 @@
+{
+  "name": "yeet-casino-bet-processor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/src/index.js",
+    "migrate": "tsx src/db/migrate.ts",
+    "migrate:prod": "node dist/src/db/migrate.js",
+    "seed": "tsx src/scripts/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "runner:rtp": "tsx src/scripts/rtp-runner.ts",
+    "worker:rtp": "tsx src/scripts/rtp-rollup-worker.ts",
+    "worker:rtp:prod": "node dist/src/scripts/rtp-rollup-worker.js",
+    "benchmark": "tsx src/scripts/benchmark.ts",
+    "benchmark:compare": "tsx src/scripts/benchmark-compare.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "pg": "^8.13.1",
+    "uuid": "^11.0.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/pg": "^8.11.11",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

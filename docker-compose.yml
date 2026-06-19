@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: yeet
+      POSTGRES_PASSWORD: yeet
+      POSTGRES_DB: yeet
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yeet -d yeet"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://yeet:yeet@db:5432/yeet
+      HMAC_SECRET: test
+      PORT: 3000
+      LOG_LEVEL: warn
+      PG_POOL_SIZE: 35
+    ports:
+      - "3000:3000"
+    command: sh -c "npm run migrate:prod && npm run start"
+
+  rtp-worker:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://yeet:yeet@db:5432/yeet
+      LOG_LEVEL: warn
+      PG_POOL_SIZE: 10
+      RTP_OUTBOX_BATCH_SIZE: 5000
+      RTP_OUTBOX_IDLE_SLEEP_MS: 100
+    command: sh -c "npm run migrate:prod && npm run worker:rtp:prod"
+
+volumes:
+  pgdata:

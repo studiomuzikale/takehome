@@ -1,0 +1,16 @@
+services:
+  rust-api:
+    build:
+      context: .
+      dockerfile: rust-service/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://yeet:yeet@db:5432/yeet
+      HMAC_SECRET: test
+      RUST_PORT: 3001
+      PG_POOL_SIZE: 35
+      RUST_LOG: info
+    ports:
+      - "3001:3001"
